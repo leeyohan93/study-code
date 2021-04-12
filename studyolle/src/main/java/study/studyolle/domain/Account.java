@@ -1,12 +1,10 @@
 package study.studyolle.domain;
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @EqualsAndHashCode(of = "id")
 @Getter
@@ -55,4 +53,35 @@ public class Account {
     private boolean studyUpdateResultByEmail;
 
     private boolean studyUpdateResultByWeb;
+
+    @Builder
+    public Account(final Long id, final String email, final String nickname, final String password,
+                   final boolean emailVerified, final String emailCheckToken, final LocalDateTime joinedAt,
+                   final String bio, final String url, final String occupation, final String location,
+                   final String profileImage, final boolean studyCreatedByEmail, final boolean studyCreatedByWeb,
+                   final boolean studyEnrollmentResultByEmail, final boolean studyEnrollmentResultByWeb,
+                   final boolean studyUpdateResultByEmail, final boolean studyUpdateResultByWeb) {
+        this.id = id;
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
+        this.emailVerified = emailVerified;
+        this.emailCheckToken = emailCheckToken;
+        this.joinedAt = joinedAt;
+        this.bio = bio;
+        this.url = url;
+        this.occupation = occupation;
+        this.location = location;
+        this.profileImage = profileImage;
+        this.studyCreatedByEmail = studyCreatedByEmail;
+        this.studyCreatedByWeb = studyCreatedByWeb;
+        this.studyEnrollmentResultByEmail = studyEnrollmentResultByEmail;
+        this.studyEnrollmentResultByWeb = studyEnrollmentResultByWeb;
+        this.studyUpdateResultByEmail = studyUpdateResultByEmail;
+        this.studyUpdateResultByWeb = studyUpdateResultByWeb;
+    }
+
+    public void generateEmailCheckToken() {
+        this.email = UUID.randomUUID().toString();
+    }
 }
