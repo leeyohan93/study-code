@@ -9,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
+import study.studyolle.domain.Account;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -63,6 +64,11 @@ class AccountControllerTest {
                 .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
+
+        Account account = accountRepository.findByEmail("misfit4007@gmail.com");
+        assertThat(account).isNotNull();
+
+        assertThat(account.getPassword()).isNotEqualTo("1234567");
 
         assertThat(accountRepository.existsByEmail("misfit4007@gmail.com"));
         then(javaMailSender).should().send(any(SimpleMailMessage.class));
