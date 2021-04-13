@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @EqualsAndHashCode(of = "id")
+@Setter
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -82,6 +83,11 @@ public class Account {
     }
 
     public void generateEmailCheckToken() {
-        this.email = UUID.randomUUID().toString();
+        this.emailCheckToken = UUID.randomUUID().toString();
+    }
+
+    public void completeSignUp() {
+        this.emailVerified = true;
+        this.joinedAt = LocalDateTime.now();
     }
 }
