@@ -14,6 +14,7 @@ import study.studyolle.domain.Account;
 
 import java.util.List;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class AccountService {
@@ -51,13 +52,19 @@ public class AccountService {
     }
 
     // TODO UserDetailService 를 상혹한 로그인 기능 구현
+    @Transactional(readOnly = true)
     public void login(final Account account) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                account.getNickname(),
+                new UserAccount(account),
                 account.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))
         );
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(token);
+    }
+
+    public void completeSignUp(final Account account) {
+        account.completeSignUp();
+        login(account);
     }
 }
