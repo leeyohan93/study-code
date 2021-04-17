@@ -1,9 +1,11 @@
 package study.studyolle.settings;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import study.studyolle.domain.Account;
 
 @Data
+@NoArgsConstructor
 public class Profile {
 
     private String bio;
