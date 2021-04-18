@@ -1,6 +1,5 @@
 package study.studyolle.settings;
 
-import lombok.With;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,10 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import study.studyolle.WithAccount;
 import study.studyolle.account.AccountRepository;
-import study.studyolle.account.AccountService;
 import study.studyolle.domain.Account;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -38,13 +37,10 @@ class SettingsControllerTest {
     @DisplayName("프로필 수정폼")
     @Test
     void updateProfileForm() throws Exception {
-        String bio = "짧은 소개를 수정하는 경우.";
         mockMvc.perform(get(SettingsController.SETTINGS_PROFILE_URL))
+                .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attributeExists("profile"));
-
-        Account yohan = accountRepository.findByNickname("yohan");
-        assertEquals(bio, yohan.getBio());
     }
 
     @WithAccount(value = "yohan")
