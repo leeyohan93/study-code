@@ -1,5 +1,6 @@
 package study.studyolle.settings;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -21,18 +22,24 @@ public class Profile {
     @Length(max = 50)
     private String location;
 
+    private String profileImage;
+
     public static Profile from(Account account) {
-        return new Profile(
-                account.getBio(),
-                account.getUrl(),
-                account.getOccupation(),
-                account.getLocation());
+        return Profile.builder()
+                .bio(account.getBio())
+                .url(account.getUrl())
+                .occupation(account.getOccupation())
+                .location(account.getLocation())
+                .profileImage(account.getProfileImage())
+                .build();
     }
 
-    public Profile(String bio, String url, String occupation, String location) {
+    @Builder
+    public Profile(String bio, String url, String occupation, String location, String profileImage) {
         this.bio = bio;
         this.url = url;
         this.occupation = occupation;
         this.location = location;
+        this.profileImage = profileImage;
     }
 }
