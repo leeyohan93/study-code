@@ -47,15 +47,15 @@ public class Account {
 
     private boolean studyCreatedByEmail;
 
-    private boolean studyCreatedByWeb;
+    private boolean studyCreatedByWeb = true;
 
     private boolean studyEnrollmentResultByEmail;
 
-    private boolean studyEnrollmentResultByWeb;
+    private boolean studyEnrollmentResultByWeb = true;
 
-    private boolean studyUpdateResultByEmail;
+    private boolean studyUpdatedByEmail;
 
-    private boolean studyUpdateResultByWeb;
+    private boolean studyUpdatedByWeb = true;
 
     @Builder
     public Account(final Long id, final String email, final String nickname, final String password,
@@ -63,7 +63,7 @@ public class Account {
                    final String bio, final String url, final String occupation, final String location,
                    final String profileImage, final boolean studyCreatedByEmail, final boolean studyCreatedByWeb,
                    final boolean studyEnrollmentResultByEmail, final boolean studyEnrollmentResultByWeb,
-                   final boolean studyUpdateResultByEmail, final boolean studyUpdateResultByWeb) {
+                   final boolean studyUpdatedByEmail, final boolean studyUpdatedByWeb) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
@@ -80,8 +80,8 @@ public class Account {
         this.studyCreatedByWeb = studyCreatedByWeb;
         this.studyEnrollmentResultByEmail = studyEnrollmentResultByEmail;
         this.studyEnrollmentResultByWeb = studyEnrollmentResultByWeb;
-        this.studyUpdateResultByEmail = studyUpdateResultByEmail;
-        this.studyUpdateResultByWeb = studyUpdateResultByWeb;
+        this.studyUpdatedByEmail = studyUpdatedByEmail;
+        this.studyUpdatedByWeb = studyUpdatedByWeb;
     }
 
     public void generateEmailCheckToken() {
