@@ -57,6 +57,9 @@ public class Account {
 
     private boolean studyUpdatedByWeb = true;
 
+    @Embedded
+    private AccountTags accountTags;
+
     @Builder
     public Account(final Long id, final String email, final String nickname, final String password,
                    final boolean emailVerified, final String emailCheckToken, final LocalDateTime joinedAt,
