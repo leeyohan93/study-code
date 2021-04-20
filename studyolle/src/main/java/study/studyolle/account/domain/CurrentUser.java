@@ -1,4 +1,4 @@
-package study.studyolle.account;
+package study.studyolle.account.domain;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

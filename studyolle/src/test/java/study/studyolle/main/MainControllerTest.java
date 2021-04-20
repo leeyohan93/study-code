@@ -7,11 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers;
 import org.springframework.test.web.servlet.MockMvc;
-import study.studyolle.account.AccountRepository;
-import study.studyolle.account.AccountService;
-import study.studyolle.account.SignUpForm;
+import study.studyolle.account.domain.AccountRepository;
+import study.studyolle.account.application.AccountService;
+import study.studyolle.account.ui.form.SignUpForm;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;

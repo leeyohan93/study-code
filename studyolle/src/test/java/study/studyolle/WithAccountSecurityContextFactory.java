@@ -8,8 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 import org.springframework.stereotype.Component;
-import study.studyolle.account.AccountService;
-import study.studyolle.account.SignUpForm;
+import study.studyolle.account.application.AccountService;
+import study.studyolle.account.ui.form.SignUpForm;
 
 @Component
 @RequiredArgsConstructor

@@ -8,8 +8,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import study.studyolle.WithAccount;
-import study.studyolle.account.AccountRepository;
-import study.studyolle.domain.Account;
+import study.studyolle.account.domain.AccountRepository;
+import study.studyolle.account.domain.Account;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;

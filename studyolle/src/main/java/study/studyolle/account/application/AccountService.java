@@ -1,4 +1,4 @@
-package study.studyolle.account;
+package study.studyolle.account.application;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -14,9 +14,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import study.studyolle.domain.Account;
-import study.studyolle.settings.Notifications;
-import study.studyolle.settings.Profile;
+import study.studyolle.account.domain.AccountRepository;
+import study.studyolle.account.ui.form.SignUpForm;
+import study.studyolle.account.domain.UserAccount;
+import study.studyolle.account.domain.Account;
+import study.studyolle.settings.form.Notifications;
+import study.studyolle.settings.form.Profile;
 
 import java.util.List;
 

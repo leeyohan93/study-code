@@ -1,7 +1,6 @@
 package study.studyolle.settings;
 
 import lombok.RequiredArgsConstructor;
-import org.dom4j.rule.Mode;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,9 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import study.studyolle.account.AccountService;
-import study.studyolle.account.CurrentUser;
-import study.studyolle.domain.Account;
+import study.studyolle.account.application.AccountService;
+import study.studyolle.account.domain.CurrentUser;
+import study.studyolle.account.domain.Account;
+import study.studyolle.settings.form.Notifications;
+import study.studyolle.settings.form.PasswordForm;
+import study.studyolle.settings.form.Profile;
+import study.studyolle.settings.validator.PasswordFormValidator;
 
 import javax.validation.Valid;
 
@@ -22,11 +25,11 @@ import javax.validation.Valid;
 public class SettingsController {
 
     static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
-    static final String SETTINGS_PROFILE_URL = "/settings/profile";
+    static final String SETTINGS_PROFILE_URL = "/" + SETTINGS_PROFILE_VIEW_NAME;
     static final String SETTINGS_PASSWORD_VIEW_NAME = "settings/password";
-    static final String SETTINGS_PASSWORD_URL = "/settings/password";
+    static final String SETTINGS_PASSWORD_URL = "/" + SETTINGS_PASSWORD_VIEW_NAME;
     static final String SETTINGS_NOTIFICATIONS_VIEW_NAME = "settings/notifications";
-    static final String SETTINGS_NOTIFICATIONS_URL = "/settings/notifications";
+    static final String SETTINGS_NOTIFICATIONS_URL = "/" + SETTINGS_NOTIFICATIONS_VIEW_NAME;
 
     private final AccountService accountService;
     private final ModelMapper modelMapper;
@@ -84,7 +87,7 @@ public class SettingsController {
     @GetMapping(SETTINGS_NOTIFICATIONS_URL)
     public String updateNotificationsForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
-        model.addAttribute(modelMapper.map(account,Notifications.class));
+        model.addAttribute(modelMapper.map(account, Notifications.class));
         return SETTINGS_NOTIFICATIONS_VIEW_NAME;
     }
 

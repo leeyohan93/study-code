@@ -1,4 +1,4 @@
-package study.studyolle.settings;
+package study.studyolle.settings.form;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

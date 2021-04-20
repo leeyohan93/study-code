@@ -1,4 +1,4 @@
-package study.studyolle.account;
+package study.studyolle.account.ui;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -10,7 +10,12 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.thymeleaf.util.StringUtils;
-import study.studyolle.domain.Account;
+import study.studyolle.account.domain.AccountRepository;
+import study.studyolle.account.domain.CurrentUser;
+import study.studyolle.account.application.AccountService;
+import study.studyolle.account.ui.form.SignUpForm;
+import study.studyolle.account.ui.validator.SignUpFormValidator;
+import study.studyolle.account.domain.Account;
 
 import javax.validation.Valid;
 
