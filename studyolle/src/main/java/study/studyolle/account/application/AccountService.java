@@ -20,6 +20,7 @@ import study.studyolle.account.domain.UserAccount;
 import study.studyolle.account.domain.Account;
 import study.studyolle.settings.form.Notifications;
 import study.studyolle.settings.form.Profile;
+import study.studyolle.tag.Tag;
 
 import java.util.List;
 
@@ -109,5 +110,10 @@ public class AccountService implements UserDetailsService {
         account.setNickname(nickname);
         accountRepository.save(account);
         login(account);
+    }
+
+    public void addTag(Account account, Tag tag) {
+        accountRepository.findById(account.getId())
+                .ifPresent(a -> a.addTag(tag));
     }
 }

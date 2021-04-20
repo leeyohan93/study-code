@@ -1,6 +1,7 @@
 package study.studyolle.account.domain;
 
 import lombok.*;
+import study.studyolle.tag.Tag;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -104,5 +105,13 @@ public class Account {
     public boolean canSendConfirmEmail() {
         return this.emailCheckTokenGeneratedAt.isBefore(LocalDateTime.now()
                 .minusHours(1));
+    }
+
+    public void addTag(Tag tag) {
+        AccountTag accountTag = AccountTag.builder()
+                .account(this)
+                .tag(tag)
+                .build();
+        accountTags.add(accountTag);
     }
 }

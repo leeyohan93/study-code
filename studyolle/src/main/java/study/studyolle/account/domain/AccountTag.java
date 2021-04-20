@@ -1,16 +1,12 @@
 package study.studyolle.account.domain;
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import study.studyolle.account.domain.Account;
+import lombok.*;
 import study.studyolle.tag.Tag;
 
 import javax.persistence.*;
 
-@EqualsAndHashCode(of = "id")
 @Getter
+@EqualsAndHashCode(of = "id")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class AccountTag {
@@ -26,4 +22,10 @@ public class AccountTag {
     @ManyToOne
     @JoinColumn(name = "tag_id")
     private Tag tag;
+
+    @Builder
+    public AccountTag(Account account, Tag tag) {
+        this.account = account;
+        this.tag = tag;
+    }
 }
