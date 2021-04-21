@@ -10,6 +10,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.studyolle.account.application.AccountService;
+import study.studyolle.account.domain.AccountTags;
 import study.studyolle.account.domain.CurrentUser;
 import study.studyolle.account.domain.Account;
 import study.studyolle.settings.form.*;
@@ -19,7 +20,9 @@ import study.studyolle.tag.Tag;
 import study.studyolle.tag.TagRepository;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Controller
@@ -153,13 +156,19 @@ public class SettingsController {
         Tag tag = tagRepository.findByTitle(tagTitle)
                 .orElseGet(() -> tagRepository.save(Tag.builder().title(tagTitle).build()));
 
-        accountService.addTag(account,tag);
+        accountService.addTag(account, tag);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping(SETTINGS_TAGS_URL)
     public String updateTagsForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
+        AccountTags accountTags = accountService.getTags(account);
+        List<String> tags = accountTags.getAccountTags()
+                .stream()
+                .map(accountTag -> accountTag.getTag().getTitle())
+                .collect(Collectors.toList());
+        model.addAttribute("tags", tags);
         return SETTINGS_TAGS_VIEW_NAME;
     }
 }

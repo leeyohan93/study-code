@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.studyolle.account.domain.AccountRepository;
+import study.studyolle.account.domain.AccountTags;
 import study.studyolle.account.ui.form.SignUpForm;
 import study.studyolle.account.domain.UserAccount;
 import study.studyolle.account.domain.Account;
@@ -115,5 +116,11 @@ public class AccountService implements UserDetailsService {
     public void addTag(Account account, Tag tag) {
         accountRepository.findById(account.getId())
                 .ifPresent(a -> a.addTag(tag));
+    }
+
+    public AccountTags getTags(Account account) {
+        return accountRepository.findById(account.getId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계정입니다."))
+                .getAccountTags();
     }
 }
