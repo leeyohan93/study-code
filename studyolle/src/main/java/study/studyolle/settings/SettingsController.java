@@ -151,12 +151,23 @@ public class SettingsController {
 
     @PostMapping(SETTINGS_TAGS_URL)
     @ResponseBody
-    public ResponseEntity updateTags(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+    public ResponseEntity addTags(@CurrentUser Account account, @RequestBody TagForm tagForm) {
         String tagTitle = tagForm.getTagTitle();
         Tag tag = tagRepository.findByTitle(tagTitle)
                 .orElseGet(() -> tagRepository.save(Tag.builder().title(tagTitle).build()));
 
         accountService.addTag(account, tag);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(SETTINGS_TAGS_URL + "/remove")
+    @ResponseBody
+    public ResponseEntity deleteTags(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+        String tagTitle = tagForm.getTagTitle();
+        Tag tag = tagRepository.findByTitle(tagTitle)
+                .orElseThrow(() -> new IllegalArgumentException(tagTitle + " 존재하지 않는 태그입니다."));
+
+        accountService.removeTag(account, tag);
         return ResponseEntity.ok().build();
     }
 

@@ -123,4 +123,11 @@ public class AccountService implements UserDetailsService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계정입니다."))
                 .getAccountTags();
     }
+
+    public void removeTag(Account account, Tag tag) {
+        accountRepository.findWithTags(account.getId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계정입니다."))
+                .getAccountTags()
+                .remove(tag);
+    }
 }
