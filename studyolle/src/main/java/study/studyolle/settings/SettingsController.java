@@ -1,5 +1,7 @@
 package study.studyolle.settings;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +49,7 @@ public class SettingsController {
     private final ModelMapper modelMapper;
     private final NicknameFormValidator nicknameValidator;
     private final TagRepository tagRepository;
+    private final ObjectMapper objectMapper;
 
     @InitBinder("passwordForm")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -180,6 +183,21 @@ public class SettingsController {
                 .map(accountTag -> accountTag.getTag().getTitle())
                 .collect(Collectors.toList());
         model.addAttribute("tags", tags);
+
+
+        model.addAttribute("whitelist", whiteList());
         return SETTINGS_TAGS_VIEW_NAME;
+    }
+
+    private String whiteList() {
+        List<String> allTags = tagRepository.findAll()
+                .stream()
+                .map(Tag::getTitle)
+                .collect(Collectors.toList());
+        try {
+            return objectMapper.writeValueAsString(allTags);
+        } catch (JsonProcessingException e) {
+            return "";
+        }
     }
 }
