@@ -5,9 +5,9 @@ import study.studyolle.tag.Tag;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
-@EqualsAndHashCode(of = "id")
 @Setter
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -59,7 +59,7 @@ public class Account {
     private boolean studyUpdatedByWeb = true;
 
     @Embedded
-    private AccountTags accountTags;
+    private AccountTags accountTags = new AccountTags();
 
     @Builder
     public Account(final Long id, final String email, final String nickname, final String password,
