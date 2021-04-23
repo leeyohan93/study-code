@@ -3,7 +3,7 @@ package study.studyolle.account.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import study.studyolle.tag.Tag;
+import study.studyolle.tag.domain.Tag;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;

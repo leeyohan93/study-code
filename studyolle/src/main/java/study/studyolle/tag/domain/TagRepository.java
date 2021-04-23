@@ -1,6 +1,7 @@
-package study.studyolle.tag;
+package study.studyolle.tag.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import study.studyolle.tag.domain.Tag;
 
 import java.util.Optional;
 

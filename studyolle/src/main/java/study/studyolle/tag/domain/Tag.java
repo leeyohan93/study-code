@@ -1,4 +1,4 @@
-package study.studyolle.tag;
+package study.studyolle.tag.domain;
 
 import lombok.*;
 

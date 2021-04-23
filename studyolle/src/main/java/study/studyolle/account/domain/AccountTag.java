@@ -1,7 +1,7 @@
 package study.studyolle.account.domain;
 
 import lombok.*;
-import study.studyolle.tag.Tag;
+import study.studyolle.tag.domain.Tag;
 
 import javax.persistence.*;
 

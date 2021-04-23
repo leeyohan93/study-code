@@ -19,12 +19,10 @@ import study.studyolle.account.domain.AccountTags;
 import study.studyolle.account.ui.form.SignUpForm;
 import study.studyolle.account.domain.UserAccount;
 import study.studyolle.account.domain.Account;
-import study.studyolle.settings.form.Notifications;
-import study.studyolle.settings.form.Profile;
-import study.studyolle.tag.Tag;
+import study.studyolle.account.ui.form.Notifications;
+import study.studyolle.account.ui.form.Profile;
+import study.studyolle.tag.domain.Tag;
 
-import javax.persistence.EntityManager;
-import javax.swing.text.html.parser.Entity;
 import java.util.List;
 
 @Transactional
@@ -36,7 +34,6 @@ public class AccountService implements UserDetailsService {
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
-    private final EntityManager entityManager;
 
     @Transactional
     public Account processNewAccount(final SignUpForm signUpForm) {

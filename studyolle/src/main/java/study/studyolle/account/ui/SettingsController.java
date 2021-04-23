@@ -1,4 +1,4 @@
-package study.studyolle.settings;
+package study.studyolle.account.ui;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,15 +15,14 @@ import study.studyolle.account.application.AccountService;
 import study.studyolle.account.domain.AccountTags;
 import study.studyolle.account.domain.CurrentUser;
 import study.studyolle.account.domain.Account;
-import study.studyolle.settings.form.*;
-import study.studyolle.settings.validator.NicknameFormValidator;
-import study.studyolle.settings.validator.PasswordFormValidator;
-import study.studyolle.tag.Tag;
-import study.studyolle.tag.TagRepository;
+import study.studyolle.account.ui.form.*;
+import study.studyolle.account.ui.validator.NicknameFormValidator;
+import study.studyolle.account.ui.validator.PasswordFormValidator;
+import study.studyolle.tag.domain.Tag;
+import study.studyolle.tag.domain.TagRepository;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor

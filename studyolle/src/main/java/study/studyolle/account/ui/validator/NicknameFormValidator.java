@@ -1,4 +1,4 @@
-package study.studyolle.settings.validator;
+package study.studyolle.account.ui.validator;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -6,7 +6,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import study.studyolle.account.domain.Account;
 import study.studyolle.account.domain.AccountRepository;
-import study.studyolle.settings.form.NicknameForm;
+import study.studyolle.account.ui.form.NicknameForm;
 
 @Component
 @RequiredArgsConstructor

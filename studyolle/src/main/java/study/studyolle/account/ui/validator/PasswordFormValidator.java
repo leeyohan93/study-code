@@ -1,8 +1,8 @@
-package study.studyolle.settings.validator;
+package study.studyolle.account.ui.validator;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import study.studyolle.settings.form.PasswordForm;
+import study.studyolle.account.ui.form.PasswordForm;
 
 public class PasswordFormValidator implements Validator {
     @Override

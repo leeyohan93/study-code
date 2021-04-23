@@ -1,11 +1,10 @@
 package study.studyolle.account.domain;
 
 import lombok.*;
-import study.studyolle.tag.Tag;
+import study.studyolle.tag.domain.Tag;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.UUID;
 
 @Setter

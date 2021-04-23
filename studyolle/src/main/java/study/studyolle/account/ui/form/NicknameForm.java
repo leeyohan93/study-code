@@ -1,4 +1,4 @@
-package study.studyolle.settings.form;
+package study.studyolle.account.ui.form;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

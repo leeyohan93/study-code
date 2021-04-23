@@ -11,13 +11,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import study.studyolle.WithAccount;
+import study.studyolle.account.ui.SettingsController;
 import study.studyolle.account.application.AccountService;
 import study.studyolle.account.domain.AccountRepository;
 import study.studyolle.account.domain.Account;
 import study.studyolle.account.domain.AccountTag;
-import study.studyolle.settings.form.TagForm;
-import study.studyolle.tag.Tag;
-import study.studyolle.tag.TagRepository;
+import study.studyolle.account.ui.form.TagForm;
+import study.studyolle.tag.domain.Tag;
+import study.studyolle.tag.domain.TagRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
