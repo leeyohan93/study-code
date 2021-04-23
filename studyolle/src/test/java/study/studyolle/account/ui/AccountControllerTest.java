@@ -1,4 +1,4 @@
-package study.studyolle.account;
+package study.studyolle.account.ui;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

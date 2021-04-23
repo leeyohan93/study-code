@@ -25,29 +25,26 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static study.studyolle.account.ui.SettingsController.ROOT;
+import static study.studyolle.account.ui.SettingsController.SETTINGS;
+
 @RequiredArgsConstructor
 @Controller
+@RequestMapping(ROOT + SETTINGS)
 public class SettingsController {
 
-    static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
-    static final String SETTINGS_PROFILE_URL = "/" + SETTINGS_PROFILE_VIEW_NAME;
-
-    static final String SETTINGS_PASSWORD_VIEW_NAME = "settings/password";
-    static final String SETTINGS_PASSWORD_URL = "/" + SETTINGS_PASSWORD_VIEW_NAME;
-
-    static final String SETTINGS_NOTIFICATIONS_VIEW_NAME = "settings/notifications";
-    static final String SETTINGS_NOTIFICATIONS_URL = "/" + SETTINGS_NOTIFICATIONS_VIEW_NAME;
-
-    static final String SETTINGS_ACCOUNT_VIEW_NAME = "settings/account";
-    static final String SETTINGS_ACCOUNT_URL = "/" + SETTINGS_ACCOUNT_VIEW_NAME;
-
-    static final String SETTINGS_TAGS_VIEW_NAME = "settings/tags";
-    static final String SETTINGS_TAGS_URL = "/" + SETTINGS_TAGS_VIEW_NAME;
+    static final String ROOT = "/";
+    static final String SETTINGS = "settings";
+    static final String PROFILE = "/profile";
+    static final String PASSWORD = "/password";
+    static final String NOTIFICATIONS = "/notifications";
+    static final String ACCOUNT = "/account";
+    static final String TAGS = "/tags";
 
     private final AccountService accountService;
-    private final ModelMapper modelMapper;
-    private final NicknameFormValidator nicknameValidator;
     private final TagRepository tagRepository;
+    private final NicknameFormValidator nicknameValidator;
+    private final ModelMapper modelMapper;
     private final ObjectMapper objectMapper;
 
     @InitBinder("passwordForm")
@@ -60,14 +57,14 @@ public class SettingsController {
         webDataBinder.addValidators(nicknameValidator);
     }
 
-    @GetMapping(SETTINGS_PROFILE_URL)
+    @GetMapping(PROFILE)
     public String profileUpdateForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
         model.addAttribute(modelMapper.map(account, Profile.class));
-        return SETTINGS_PROFILE_VIEW_NAME;
+        return SETTINGS + PROFILE;
     }
 
-    @PostMapping(SETTINGS_PROFILE_URL)
+    @PostMapping(PROFILE)
     public String updateProfile(@CurrentUser Account account,
                                 @Valid Profile profile,
                                 Errors errors,
@@ -75,21 +72,21 @@ public class SettingsController {
                                 RedirectAttributes attributes) {
         if (errors.hasErrors()) {
             model.addAttribute(account);
-            return SETTINGS_PROFILE_VIEW_NAME;
+            return SETTINGS + PROFILE;
         }
         accountService.updateProfile(account, profile);
         attributes.addFlashAttribute("message", "프로필을 수정했습니다.");
-        return "redirect:" + SETTINGS_PROFILE_URL;
+        return "redirect:/" + SETTINGS + PROFILE;
     }
 
-    @GetMapping(SETTINGS_PASSWORD_URL)
+    @GetMapping(PASSWORD)
     public String updatePasswordForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
         model.addAttribute(new PasswordForm());
-        return SETTINGS_PASSWORD_VIEW_NAME;
+        return SETTINGS+PASSWORD;
     }
 
-    @PostMapping(SETTINGS_PASSWORD_URL)
+    @PostMapping(PASSWORD)
     public String updatePassword(@CurrentUser Account account,
                                  @Valid PasswordForm passwordForm,
                                  Errors errors,
@@ -97,22 +94,22 @@ public class SettingsController {
                                  RedirectAttributes attributes) {
         if (errors.hasErrors()) {
             model.addAttribute(account);
-            return SETTINGS_PASSWORD_VIEW_NAME;
+            return SETTINGS + PASSWORD;
         }
 
         accountService.updatePassword(account, passwordForm.getNewPassword());
         attributes.addFlashAttribute("message", "프로필을 수정했습니다.");
-        return "redirect:" + SETTINGS_PROFILE_URL;
+        return "redirect:/" + SETTINGS + PASSWORD;
     }
 
-    @GetMapping(SETTINGS_NOTIFICATIONS_URL)
+    @GetMapping(NOTIFICATIONS)
     public String updateNotificationsForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
         model.addAttribute(modelMapper.map(account, Notifications.class));
-        return SETTINGS_NOTIFICATIONS_VIEW_NAME;
+        return SETTINGS+NOTIFICATIONS;
     }
 
-    @PostMapping(SETTINGS_NOTIFICATIONS_URL)
+    @PostMapping(NOTIFICATIONS)
     public String updateNotifications(@CurrentUser Account account,
                                       @Valid Notifications notifications,
                                       Errors errors,
@@ -120,15 +117,22 @@ public class SettingsController {
                                       RedirectAttributes attributes) {
         if (errors.hasErrors()) {
             model.addAttribute(account);
-            return SETTINGS_NOTIFICATIONS_VIEW_NAME;
+            return SETTINGS + NOTIFICATIONS;
         }
 
         accountService.updateNotifications(account, notifications);
         attributes.addFlashAttribute("message", "알림 설정을 변경했습니다.");
-        return "redirect:" + SETTINGS_NOTIFICATIONS_URL;
+        return "redirect:/" + SETTINGS + NOTIFICATIONS;
     }
 
-    @PostMapping(SETTINGS_ACCOUNT_URL)
+    @GetMapping(ACCOUNT)
+    public String updateAccountForm(@CurrentUser Account account, Model model) {
+        model.addAttribute(account);
+        model.addAttribute(modelMapper.map(account, NicknameForm.class));
+        return SETTINGS + ACCOUNT;
+    }
+
+    @PostMapping(ACCOUNT)
     public String updateAccount(@CurrentUser Account account,
                                 @Valid NicknameForm nicknameForm,
                                 Errors errors,
@@ -136,44 +140,15 @@ public class SettingsController {
                                 RedirectAttributes attributes) {
         if (errors.hasErrors()) {
             model.addAttribute(account);
-            return SETTINGS_ACCOUNT_VIEW_NAME;
+            return SETTINGS + ACCOUNT;
         }
 
         accountService.updateNickname(account, nicknameForm.getNickname());
         attributes.addFlashAttribute("message", "닉네임을 변경했습니다.");
-        return "redirect:" + SETTINGS_ACCOUNT_URL;
+        return "redirect:/" + SETTINGS + ACCOUNT;
     }
 
-    @GetMapping(SETTINGS_ACCOUNT_URL)
-    public String updateAccountForm(@CurrentUser Account account, Model model) {
-        model.addAttribute(account);
-        model.addAttribute(modelMapper.map(account, NicknameForm.class));
-        return SETTINGS_ACCOUNT_VIEW_NAME;
-    }
-
-    @PostMapping(SETTINGS_TAGS_URL)
-    @ResponseBody
-    public ResponseEntity addTags(@CurrentUser Account account, @RequestBody TagForm tagForm) {
-        String tagTitle = tagForm.getTagTitle();
-        Tag tag = tagRepository.findByTitle(tagTitle)
-                .orElseGet(() -> tagRepository.save(Tag.builder().title(tagTitle).build()));
-
-        accountService.addTag(account, tag);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping(SETTINGS_TAGS_URL + "/remove")
-    @ResponseBody
-    public ResponseEntity deleteTags(@CurrentUser Account account, @RequestBody TagForm tagForm) {
-        String tagTitle = tagForm.getTagTitle();
-        Tag tag = tagRepository.findByTitle(tagTitle)
-                .orElseThrow(() -> new IllegalArgumentException(tagTitle + " 존재하지 않는 태그입니다."));
-
-        accountService.removeTag(account, tag);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping(SETTINGS_TAGS_URL)
+    @GetMapping(TAGS)
     public String updateTagsForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
         AccountTags accountTags = accountService.getTags(account);
@@ -185,7 +160,7 @@ public class SettingsController {
 
 
         model.addAttribute("whitelist", whiteList());
-        return SETTINGS_TAGS_VIEW_NAME;
+        return SETTINGS + TAGS;
     }
 
     private String whiteList() {
@@ -198,5 +173,27 @@ public class SettingsController {
         } catch (JsonProcessingException e) {
             return "";
         }
+    }
+
+    @PostMapping(TAGS)
+    @ResponseBody
+    public ResponseEntity<Object> addTags(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+        String tagTitle = tagForm.getTagTitle();
+        Tag tag = tagRepository.findByTitle(tagTitle)
+                .orElseGet(() -> tagRepository.save(Tag.builder().title(tagTitle).build()));
+
+        accountService.addTag(account, tag);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(TAGS + "/remove")
+    @ResponseBody
+    public ResponseEntity<Object> deleteTags(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+        String tagTitle = tagForm.getTagTitle();
+        Tag tag = tagRepository.findByTitle(tagTitle)
+                .orElseThrow(() -> new IllegalArgumentException(tagTitle + " 존재하지 않는 태그입니다."));
+
+        accountService.removeTag(account, tag);
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,4 +1,4 @@
-package study.studyolle.settings;
+package study.studyolle.account.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -28,6 +28,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static study.studyolle.account.ui.SettingsController.*;
 
 @Transactional
 @SpringBootTest
@@ -58,8 +59,8 @@ class SettingsControllerTest {
     @DisplayName("계정의 태그 수정폼")
     @Test
     void updateTagForm() throws Exception {
-        mockMvc.perform(get(SettingsController.SETTINGS_TAGS_URL))
-                .andExpect(view().name(SettingsController.SETTINGS_TAGS_VIEW_NAME))
+        mockMvc.perform(get(ROOT + SETTINGS + TAGS))
+                .andExpect(view().name(SETTINGS + TAGS))
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attributeExists("tags"))
                 .andExpect(model().attributeExists("whitelist"));
@@ -72,7 +73,7 @@ class SettingsControllerTest {
         TagForm tagForm = new TagForm();
         tagForm.setTagTitle("newTag");
 
-        mockMvc.perform(post(SettingsController.SETTINGS_TAGS_URL)
+        mockMvc.perform(post(ROOT + SETTINGS + TAGS)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(tagForm))
                 .with(csrf()))
@@ -103,11 +104,11 @@ class SettingsControllerTest {
         TagForm tagForm = new TagForm();
         tagForm.setTagTitle("newTag");
 
-        mockMvc.perform(post(SettingsController.SETTINGS_TAGS_URL + "/remove")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(tagForm))
-        .with(csrf()))
-        .andExpect(status().isOk());
+        mockMvc.perform(post(ROOT + SETTINGS + TAGS + "/remove")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tagForm))
+                .with(csrf()))
+                .andExpect(status().isOk());
 
         List<Tag> newTags = getTags(yohan);
         assertFalse(newTags.contains(newTag));
@@ -125,8 +126,8 @@ class SettingsControllerTest {
     @DisplayName("닉네임 수정폼")
     @Test
     void updateNicknameForm() throws Exception {
-        mockMvc.perform(get(SettingsController.SETTINGS_ACCOUNT_URL))
-                .andExpect(view().name(SettingsController.SETTINGS_ACCOUNT_VIEW_NAME))
+        mockMvc.perform(get(ROOT + SETTINGS + ACCOUNT))
+                .andExpect(view().name(SETTINGS + ACCOUNT))
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attributeExists("nicknameForm"));
     }
@@ -136,11 +137,11 @@ class SettingsControllerTest {
     @Test
     void updateNickname() throws Exception {
         String newNickname = "yohan2";
-        mockMvc.perform(post(SettingsController.SETTINGS_ACCOUNT_URL)
+        mockMvc.perform(post(ROOT + SETTINGS + ACCOUNT)
                 .param("nickname", newNickname)
                 .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(SettingsController.SETTINGS_ACCOUNT_URL))
+                .andExpect(redirectedUrl(ROOT + SETTINGS + ACCOUNT))
                 .andExpect(flash().attributeExists("message"));
 
         Account yohan2 = accountRepository.findByNickname("yohan2");
@@ -152,11 +153,11 @@ class SettingsControllerTest {
     @Test
     void updateNickname_error() throws Exception {
         String duplicatedNickname = "yohan";
-        mockMvc.perform(post(SettingsController.SETTINGS_ACCOUNT_URL)
+        mockMvc.perform(post(ROOT + SETTINGS + ACCOUNT)
                 .param("nickname", duplicatedNickname)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(view().name(SettingsController.SETTINGS_ACCOUNT_VIEW_NAME))
+                .andExpect(view().name(SETTINGS + ACCOUNT))
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attributeExists("nicknameForm"))
                 .andExpect(model().hasErrors());
@@ -166,7 +167,7 @@ class SettingsControllerTest {
     @DisplayName("프로필 수정폼")
     @Test
     void updateProfileForm() throws Exception {
-        mockMvc.perform(get(SettingsController.SETTINGS_PROFILE_URL))
+        mockMvc.perform(get(ROOT + SETTINGS + PROFILE))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attributeExists("profile"));
@@ -177,11 +178,11 @@ class SettingsControllerTest {
     @Test
     void updateProfile() throws Exception {
         String bio = "짧은 소개를 수정";
-        mockMvc.perform(post(SettingsController.SETTINGS_PROFILE_URL)
+        mockMvc.perform(post(ROOT + SETTINGS + PROFILE)
                 .param("bio", bio)
                 .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(SettingsController.SETTINGS_PROFILE_URL))
+                .andExpect(redirectedUrl(ROOT + SETTINGS + PROFILE))
                 .andExpect(flash().attributeExists("message"));
 
         Account yohan = accountRepository.findByNickname("yohan");
@@ -193,11 +194,11 @@ class SettingsControllerTest {
     @Test
     void updateProfile_error() throws Exception {
         String bio = "너무 길게 소개를 수정하는 경우. 너무 길게 소개를 수정하는 경우. 너무 길게 소개를 수정하는 경우. 너무 길게 소개를 수정하는 경우.";
-        mockMvc.perform(post(SettingsController.SETTINGS_PROFILE_URL)
+        mockMvc.perform(post(ROOT + SETTINGS + PROFILE)
                 .param("bio", bio)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(view().name(SettingsController.SETTINGS_PROFILE_VIEW_NAME))
+                .andExpect(view().name(SETTINGS + PROFILE))
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attributeExists("profile"))
                 .andExpect(model().hasErrors());
