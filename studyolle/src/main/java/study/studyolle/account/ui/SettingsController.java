@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.studyolle.account.application.AccountService;
 import study.studyolle.account.domain.AccountTags;
-import study.studyolle.account.domain.CurrentUser;
+import study.studyolle.account.domain.CurrentAccount;
 import study.studyolle.account.domain.Account;
 import study.studyolle.account.ui.form.*;
 import study.studyolle.account.ui.validator.NicknameFormValidator;
@@ -58,14 +58,14 @@ public class SettingsController {
     }
 
     @GetMapping(PROFILE)
-    public String profileUpdateForm(@CurrentUser Account account, Model model) {
+    public String profileUpdateForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
         model.addAttribute(modelMapper.map(account, Profile.class));
         return SETTINGS + PROFILE;
     }
 
     @PostMapping(PROFILE)
-    public String updateProfile(@CurrentUser Account account,
+    public String updateProfile(@CurrentAccount Account account,
                                 @Valid Profile profile,
                                 Errors errors,
                                 Model model,
@@ -80,14 +80,14 @@ public class SettingsController {
     }
 
     @GetMapping(PASSWORD)
-    public String updatePasswordForm(@CurrentUser Account account, Model model) {
+    public String updatePasswordForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
         model.addAttribute(new PasswordForm());
         return SETTINGS+PASSWORD;
     }
 
     @PostMapping(PASSWORD)
-    public String updatePassword(@CurrentUser Account account,
+    public String updatePassword(@CurrentAccount Account account,
                                  @Valid PasswordForm passwordForm,
                                  Errors errors,
                                  Model model,
@@ -103,14 +103,14 @@ public class SettingsController {
     }
 
     @GetMapping(NOTIFICATIONS)
-    public String updateNotificationsForm(@CurrentUser Account account, Model model) {
+    public String updateNotificationsForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
         model.addAttribute(modelMapper.map(account, Notifications.class));
         return SETTINGS+NOTIFICATIONS;
     }
 
     @PostMapping(NOTIFICATIONS)
-    public String updateNotifications(@CurrentUser Account account,
+    public String updateNotifications(@CurrentAccount Account account,
                                       @Valid Notifications notifications,
                                       Errors errors,
                                       Model model,
@@ -126,14 +126,14 @@ public class SettingsController {
     }
 
     @GetMapping(ACCOUNT)
-    public String updateAccountForm(@CurrentUser Account account, Model model) {
+    public String updateAccountForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
         model.addAttribute(modelMapper.map(account, NicknameForm.class));
         return SETTINGS + ACCOUNT;
     }
 
     @PostMapping(ACCOUNT)
-    public String updateAccount(@CurrentUser Account account,
+    public String updateAccount(@CurrentAccount Account account,
                                 @Valid NicknameForm nicknameForm,
                                 Errors errors,
                                 Model model,
@@ -149,7 +149,7 @@ public class SettingsController {
     }
 
     @GetMapping(TAGS)
-    public String updateTagsForm(@CurrentUser Account account, Model model) {
+    public String updateTagsForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
         AccountTags accountTags = accountService.getTags(account);
         List<String> tags = accountTags.getAccountTags()
@@ -177,7 +177,7 @@ public class SettingsController {
 
     @PostMapping(TAGS)
     @ResponseBody
-    public ResponseEntity<Object> addTags(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+    public ResponseEntity<Object> addTags(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
         String tagTitle = tagForm.getTagTitle();
         Tag tag = tagRepository.findByTitle(tagTitle)
                 .orElseGet(() -> tagRepository.save(Tag.builder().title(tagTitle).build()));
@@ -188,7 +188,7 @@ public class SettingsController {
 
     @PostMapping(TAGS + "/remove")
     @ResponseBody
-    public ResponseEntity<Object> deleteTags(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+    public ResponseEntity<Object> deleteTags(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
         String tagTitle = tagForm.getTagTitle();
         Tag tag = tagRepository.findByTitle(tagTitle)
                 .orElseThrow(() -> new IllegalArgumentException(tagTitle + " 존재하지 않는 태그입니다."));

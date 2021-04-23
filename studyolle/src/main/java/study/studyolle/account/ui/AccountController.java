@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.thymeleaf.util.StringUtils;
 import study.studyolle.account.domain.AccountRepository;
-import study.studyolle.account.domain.CurrentUser;
+import study.studyolle.account.domain.CurrentAccount;
 import study.studyolle.account.application.AccountService;
 import study.studyolle.account.ui.form.SignUpForm;
 import study.studyolle.account.ui.validator.SignUpFormValidator;
@@ -49,13 +49,13 @@ public class AccountController {
     }
 
     @GetMapping("/check-email")
-    public String checkEmail(@CurrentUser Account account, Model model) {
+    public String checkEmail(@CurrentAccount Account account, Model model) {
         model.addAttribute("email", account.getEmail());
         return "account/check-email";
     }
 
     @GetMapping("/resend-confirm-email")
-    public String resendConfirmEmail(@CurrentUser Account account, Model model) {
+    public String resendConfirmEmail(@CurrentAccount Account account, Model model) {
         if (!account.canSendConfirmEmail()) {
             model.addAttribute("error", "인증 이메일은 1시간에 한번만 전송할 수 있습니다.");
             model.addAttribute("email", account.getEmail());
@@ -89,7 +89,7 @@ public class AccountController {
 
     @GetMapping("/profile/{nickname}")
     public String viewProfile(@PathVariable String nickname,
-                              @CurrentUser Account account,
+                              @CurrentAccount Account account,
                               Model model) {
         Account byNickname = accountRepository.findByNickname(nickname);
         if (StringUtils.isEmpty(nickname)) {
