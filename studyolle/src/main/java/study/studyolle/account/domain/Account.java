@@ -9,6 +9,7 @@ import java.util.UUID;
 
 @Setter
 @Getter
+@EqualsAndHashCode(of = "id")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Account {
