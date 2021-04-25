@@ -29,4 +29,10 @@ public class Zone {
         this.localNameOfCity = localNameOfCity;
         this.province = province;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s(%s)/%s", city, localNameOfCity, province);
+    }
+
 }

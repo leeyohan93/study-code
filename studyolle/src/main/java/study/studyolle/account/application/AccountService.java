@@ -21,6 +21,7 @@ import study.studyolle.account.domain.UserAccount;
 import study.studyolle.account.domain.Account;
 import study.studyolle.account.ui.form.Notifications;
 import study.studyolle.account.ui.form.Profile;
+import study.studyolle.jone.domain.Zone;
 import study.studyolle.tag.domain.Tag;
 
 import java.util.List;
@@ -123,5 +124,21 @@ public class AccountService implements UserDetailsService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계정입니다."))
                 .getAccountTags()
                 .remove(tag);
+    }
+
+    public List<Zone> getZones(Account account) {
+        return accountRepository.findById(account.getId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계정입니다."))
+                .getZones();
+    }
+
+    public void addZone(Account account, Zone zone) {
+        accountRepository.findById(account.getId())
+                .ifPresent(a -> a.addZone(zone));
+    }
+
+    public void removeZone(Account account, Zone zone) {
+        accountRepository.findById(account.getId())
+                .ifPresent(a -> a.remove(zone));
     }
 }

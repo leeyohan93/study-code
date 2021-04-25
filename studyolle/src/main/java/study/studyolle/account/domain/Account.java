@@ -1,10 +1,15 @@
 package study.studyolle.account.domain;
 
 import lombok.*;
+import study.studyolle.jone.domain.Zone;
 import study.studyolle.tag.domain.Tag;
+
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Setter
@@ -61,6 +66,9 @@ public class Account {
     @Embedded
     private AccountTags accountTags = new AccountTags();
 
+    @ManyToMany
+    private List<Zone> zones = new ArrayList<>();
+
     @Builder
     public Account(final Long id, final String email, final String nickname, final String password,
                    final boolean emailVerified, final String emailCheckToken, final LocalDateTime joinedAt,
@@ -113,5 +121,15 @@ public class Account {
                 .tag(tag)
                 .build();
         accountTags.add(accountTag);
+    }
+
+    public void addZone(Zone zone) {
+        zones.add(zone);
+    }
+
+    public void remove(Zone zone) {
+        if(zones.contains(zone)){
+            zones.remove(zone);
+        }
     }
 }

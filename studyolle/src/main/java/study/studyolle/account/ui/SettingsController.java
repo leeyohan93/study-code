@@ -12,12 +12,14 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.studyolle.account.application.AccountService;
+import study.studyolle.account.domain.Account;
 import study.studyolle.account.domain.AccountTags;
 import study.studyolle.account.domain.CurrentAccount;
-import study.studyolle.account.domain.Account;
 import study.studyolle.account.ui.form.*;
 import study.studyolle.account.ui.validator.NicknameFormValidator;
 import study.studyolle.account.ui.validator.PasswordFormValidator;
+import study.studyolle.jone.domain.Zone;
+import study.studyolle.jone.domain.ZoneRepository;
 import study.studyolle.tag.domain.Tag;
 import study.studyolle.tag.domain.TagRepository;
 
@@ -40,9 +42,11 @@ public class SettingsController {
     static final String NOTIFICATIONS = "/notifications";
     static final String ACCOUNT = "/account";
     static final String TAGS = "/tags";
+    static final String ZONES = "/zones";
 
     private final AccountService accountService;
     private final TagRepository tagRepository;
+    private final ZoneRepository zoneRepository;
     private final NicknameFormValidator nicknameValidator;
     private final ModelMapper modelMapper;
     private final ObjectMapper objectMapper;
@@ -83,7 +87,7 @@ public class SettingsController {
     public String updatePasswordForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
         model.addAttribute(new PasswordForm());
-        return SETTINGS+PASSWORD;
+        return SETTINGS + PASSWORD;
     }
 
     @PostMapping(PASSWORD)
@@ -106,7 +110,7 @@ public class SettingsController {
     public String updateNotificationsForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
         model.addAttribute(modelMapper.map(account, Notifications.class));
-        return SETTINGS+NOTIFICATIONS;
+        return SETTINGS + NOTIFICATIONS;
     }
 
     @PostMapping(NOTIFICATIONS)
@@ -159,11 +163,11 @@ public class SettingsController {
         model.addAttribute("tags", tags);
 
 
-        model.addAttribute("whitelist", whiteList());
+        model.addAttribute("whitelist", tagWhiteList());
         return SETTINGS + TAGS;
     }
 
-    private String whiteList() {
+    private String tagWhiteList() {
         List<String> allTags = tagRepository.findAll()
                 .stream()
                 .map(Tag::getTitle)
@@ -194,6 +198,56 @@ public class SettingsController {
                 .orElseThrow(() -> new IllegalArgumentException(tagTitle + " 존재하지 않는 태그입니다."));
 
         accountService.removeTag(account, tag);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(ZONES)
+    public String updateZonesForm(@CurrentAccount Account account, Model model) {
+        model.addAttribute(account);
+
+        List<Zone> zones = accountService.getZones(account);
+        List<String> zoneFormats = zones.stream()
+                .map(Zone::toString)
+                .collect(Collectors.toList());
+        model.addAttribute("zones", zoneFormats);
+        model.addAttribute("whitelist", zoneWhiteList());
+
+        return SETTINGS + ZONES;
+    }
+
+    private String zoneWhiteList() {
+        List<String> allZones = zoneRepository.findAll()
+                .stream()
+                .map(Zone::toString)
+                .collect(Collectors.toList());
+        try {
+            return objectMapper.writeValueAsString(allZones);
+        } catch (JsonProcessingException e) {
+            return "";
+        }
+    }
+
+    @PostMapping(ZONES)
+    @ResponseBody
+    public ResponseEntity<Object> addZone(@CurrentAccount Account account, @RequestBody ZoneForm zoneForm) {
+        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName());
+        if (zone == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        accountService.addZone(account, zone);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(ZONES + "/remove")
+    @ResponseBody
+    public ResponseEntity<Object> removeZone(@CurrentAccount Account account, @RequestBody ZoneForm zoneForm) {
+        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName());
+        if (zone == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        accountService.removeZone(account, zone);
         return ResponseEntity.ok().build();
     }
 }
