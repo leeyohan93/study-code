@@ -2,8 +2,6 @@ package study.studyolle.account.application;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -14,14 +12,19 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import study.studyolle.account.domain.Account;
 import study.studyolle.account.domain.AccountRepository;
 import study.studyolle.account.domain.AccountTags;
-import study.studyolle.account.ui.form.SignUpForm;
 import study.studyolle.account.domain.UserAccount;
-import study.studyolle.account.domain.Account;
 import study.studyolle.account.ui.form.Notifications;
 import study.studyolle.account.ui.form.Profile;
+import study.studyolle.account.ui.form.SignUpForm;
+import study.studyolle.config.AppProperties;
 import study.studyolle.jone.domain.Zone;
+import study.studyolle.mail.application.EmailService;
+import study.studyolle.mail.domain.EmailMessage;
 import study.studyolle.tag.domain.Tag;
 
 import java.util.List;
@@ -32,9 +35,11 @@ import java.util.List;
 public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
-    private final JavaMailSender javaMailSender;
+    private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
+    private final TemplateEngine templateEngine;
+    private final AppProperties appProperties;
 
     @Transactional
     public Account processNewAccount(final SignUpForm signUpForm) {
@@ -51,11 +56,22 @@ public class AccountService implements UserDetailsService {
     }
 
     public void sendSignUpConfirmEmail(final Account newAccount) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setSubject("스터디올래, 회원 가입 인증");
-        mailMessage.setText("/check-email-token?token=" + newAccount.getEmailCheckToken() +
+        Context context = new Context();
+        context.setVariable("link", "/check-email-token?token=" + newAccount.getEmailCheckToken() +
                 "&email=" + newAccount.getEmail());
-        javaMailSender.send(mailMessage);
+        context.setVariable("nickname", newAccount.getNickname());
+        context.setVariable("linkName", "이메일 인증하기");
+        context.setVariable("message", "스터디 올래 서비스를 사용하려면 링크를 클릭하세요.");
+        context.setVariable("host", appProperties.getHost());
+
+        String message = templateEngine.process("mail/simple-link", context);
+
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(newAccount.getEmail())
+                .subject("스터디올래, 회원 가입 인증")
+                .message(message)
+                .build();
+        emailService.sendEmail(emailMessage);
     }
 
     @Transactional(readOnly = true)
