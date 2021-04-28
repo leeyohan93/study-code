@@ -80,4 +80,8 @@ public class Study {
         this.fullDescription = fullDescription;
         this.image = image;
     }
+
+    public void addManger(Account account){
+        managers.add(account);
+    }
 }
