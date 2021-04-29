@@ -2,6 +2,7 @@ package study.studyolle.study.domain;
 
 import lombok.*;
 import study.studyolle.account.domain.Account;
+import study.studyolle.account.domain.UserAccount;
 import study.studyolle.jone.domain.Zone;
 import study.studyolle.tag.domain.Tag;
 
@@ -83,5 +84,20 @@ public class Study {
 
     public void addManger(Account account){
         managers.add(account);
+    }
+
+    public boolean isJoinable(UserAccount userAccount) {
+        Account account = userAccount.getAccount();
+        return this.isPublished() && this.isRecruiting()
+                && !this.members.contains(account) && !this.managers.contains(account);
+
+    }
+
+    public boolean isMember(UserAccount userAccount) {
+        return this.members.contains(userAccount.getAccount());
+    }
+
+    public boolean isManager(UserAccount userAccount) {
+        return this.managers.contains(userAccount.getAccount());
     }
 }
