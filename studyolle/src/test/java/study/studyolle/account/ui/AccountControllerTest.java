@@ -37,6 +37,22 @@ class AccountControllerTest {
 
     @DisplayName("회원 가입 화면 보이는지 테스트")
     @Test
+    @Transactional(readOnly = true)
+    void signUpFrm() throws Exception {
+        Account account = Account.builder()
+                .id(1L)
+                .nickname("yohan")
+                .build();
+        Account save = accountRepository.save(account);
+
+        Account yohan = accountRepository.findByNickname("yohan");
+        yohan.setNickname("yoyo");
+        System.out.println(accountRepository.findByNickname("yohan").getNickname());
+
+    }
+
+    @DisplayName("회원 가입 화면 보이는지 테스트")
+    @Test
     void signUpForm() throws Exception {
         mockMvc.perform(get("/sign-up"))
                 .andDo(print())

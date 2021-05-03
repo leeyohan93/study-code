@@ -31,6 +31,7 @@ public class StudyController {
     static final String STUDY = "study";
     static final String FORM = "/form";
     static final String VIEW = "/view";
+    static final String MEMBERS = "/members";
 
     private final StudyRepository studyRepository;
     private final StudyService studyService;
@@ -71,4 +72,10 @@ public class StudyController {
         return STUDY + VIEW;
     }
 
+    @GetMapping("{path}/members")
+    public String viewStudyMembers(@CurrentAccount Account account, @PathVariable String path, Model model) {
+        model.addAttribute(account);
+        model.addAttribute(studyRepository.findByPath(path));
+        return STUDY + MEMBERS;
+    }
 }

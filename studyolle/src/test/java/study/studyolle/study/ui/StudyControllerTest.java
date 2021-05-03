@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import study.studyolle.WithAccount;
+import study.studyolle.account.domain.Account;
+import study.studyolle.account.domain.AccountRepository;
 import study.studyolle.account.ui.form.ZoneForm;
 import study.studyolle.jone.domain.Zone;
 import study.studyolle.study.application.StudyService;
@@ -36,7 +38,44 @@ class StudyControllerTest {
     StudyRepository studyRepository;
 
     @Autowired
+    AccountRepository accountRepository;
+
+    @Autowired
     StudyService studyService;
+
+    @WithAccount(value = "yohan")
+    @DisplayName("스터디 회원 조회")
+    @Test
+    void viewStudyMembers() throws Exception {
+        // given
+        Account account = accountRepository.findByNickname("yohan");
+        String path = "test";
+        Study study = Study.builder().path(path).build();
+        study.addManger(account);
+        studyRepository.save(study);
+
+        // when / then
+        mockMvc.perform(get(ROOT + STUDY+ "/" + path + MEMBERS))
+                .andExpect(view().name(STUDY + MEMBERS))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("study"));
+    }
+
+    @WithAccount(value = "yohan")
+    @DisplayName("스터디 조회")
+    @Test
+    void viewStudy() throws Exception {
+        // given
+        String path = "test";
+        Study study = Study.builder().path(path).build();
+        studyRepository.save(study);
+
+        // when / then
+        mockMvc.perform(get(ROOT + STUDY + "/" + path))
+                .andExpect(view().name(STUDY + VIEW))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("study"));
+    }
 
     @WithAccount(value = "yohan")
     @DisplayName("스터디 추가 폼")
