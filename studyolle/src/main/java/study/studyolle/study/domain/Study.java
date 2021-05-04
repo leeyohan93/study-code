@@ -98,6 +98,10 @@ public class Study {
     }
 
     public boolean isManager(UserAccount userAccount) {
-        return this.managers.contains(userAccount.getAccount());
+        return isManager(userAccount.getAccount());
+    }
+
+    public boolean isManager(Account account) {
+        return this.managers.contains(account);
     }
 }

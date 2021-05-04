@@ -11,7 +11,6 @@ import study.studyolle.account.domain.Account;
 import study.studyolle.account.domain.CurrentAccount;
 import study.studyolle.study.application.StudyService;
 import study.studyolle.study.domain.Study;
-import study.studyolle.study.domain.StudyRepository;
 import study.studyolle.study.ui.form.StudyForm;
 import study.studyolle.study.ui.validator.StudyFormValidator;
 
@@ -33,7 +32,6 @@ public class StudyController {
     static final String VIEW = "/view";
     static final String MEMBERS = "/members";
 
-    private final StudyRepository studyRepository;
     private final StudyService studyService;
     private final ModelMapper modelMapper;
     private final StudyFormValidator studyFormValidator;
@@ -67,7 +65,7 @@ public class StudyController {
     @GetMapping("/{path}")
     public String viewStudy(@CurrentAccount Account account, @PathVariable String path, Model model) {
         model.addAttribute(account);
-        Study withAllByPath = studyRepository.findByPath(path);
+        Study withAllByPath = studyService.getStudy(path);
         model.addAttribute(withAllByPath);
         return STUDY + VIEW;
     }
@@ -75,7 +73,7 @@ public class StudyController {
     @GetMapping("{path}/members")
     public String viewStudyMembers(@CurrentAccount Account account, @PathVariable String path, Model model) {
         model.addAttribute(account);
-        model.addAttribute(studyRepository.findByPath(path));
+        model.addAttribute(studyService.getStudy(path));
         return STUDY + MEMBERS;
     }
 }
