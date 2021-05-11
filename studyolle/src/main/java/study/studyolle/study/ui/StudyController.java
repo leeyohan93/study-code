@@ -65,7 +65,7 @@ public class StudyController {
     @GetMapping("/{path}")
     public String viewStudy(@CurrentAccount Account account, @PathVariable String path, Model model) {
         model.addAttribute(account);
-        Study withAllByPath = studyService.getStudy(path);
+        Study withAllByPath = studyService.getStudyWithAll(path);
         model.addAttribute(withAllByPath);
         return STUDY + VIEW;
     }
@@ -73,7 +73,7 @@ public class StudyController {
     @GetMapping("{path}/members")
     public String viewStudyMembers(@CurrentAccount Account account, @PathVariable String path, Model model) {
         model.addAttribute(account);
-        model.addAttribute(studyService.getStudy(path));
+        model.addAttribute(studyService.getStudyWithAll(path));
         return STUDY + MEMBERS;
     }
 }
