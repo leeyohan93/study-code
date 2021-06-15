@@ -21,7 +21,7 @@ import study.studyolle.account.ui.validator.PasswordFormValidator;
 import study.studyolle.jone.domain.Zone;
 import study.studyolle.jone.domain.ZoneRepository;
 import study.studyolle.tag.domain.Tag;
-import study.studyolle.tag.domain.TagRepository;
+import study.studyolle.tag.domain.TagService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -45,7 +45,7 @@ public class SettingsController {
     static final String ZONES = "/zones";
 
     private final AccountService accountService;
-    private final TagRepository tagRepository;
+    private final TagService tagService;
     private final ZoneRepository zoneRepository;
     private final NicknameFormValidator nicknameValidator;
     private final ModelMapper modelMapper;
@@ -168,7 +168,7 @@ public class SettingsController {
     }
 
     private String tagWhiteList() {
-        List<String> allTags = tagRepository.findAll()
+        List<String> allTags = tagService.getTags()
                 .stream()
                 .map(Tag::getTitle)
                 .collect(Collectors.toList());
@@ -182,10 +182,7 @@ public class SettingsController {
     @PostMapping(TAGS)
     @ResponseBody
     public ResponseEntity<Object> addTags(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
-        String tagTitle = tagForm.getTagTitle();
-        Tag tag = tagRepository.findByTitle(tagTitle)
-                .orElseGet(() -> tagRepository.save(Tag.builder().title(tagTitle).build()));
-
+        Tag tag = tagService.findOrCreateNew(tagForm.getTagTitle());
         accountService.addTag(account, tag);
         return ResponseEntity.ok().build();
     }
@@ -193,10 +190,7 @@ public class SettingsController {
     @PostMapping(TAGS + "/remove")
     @ResponseBody
     public ResponseEntity<Object> deleteTags(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
-        String tagTitle = tagForm.getTagTitle();
-        Tag tag = tagRepository.findByTitle(tagTitle)
-                .orElseThrow(() -> new IllegalArgumentException(tagTitle + " 존재하지 않는 태그입니다."));
-
+        Tag tag = tagService.getTag(tagForm.getTagTitle());
         accountService.removeTag(account, tag);
         return ResponseEntity.ok().build();
     }

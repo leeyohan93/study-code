@@ -2,6 +2,7 @@ package study.studyolle.account.domain;
 
 import lombok.*;
 import study.studyolle.jone.domain.Zone;
+import study.studyolle.study.domain.Study;
 import study.studyolle.tag.domain.Tag;
 
 
