@@ -151,4 +151,11 @@ public class StudyService {
     public void updateStudyTitle(Study study, String newTitle) {
         study.setTitle(newTitle);
     }
+
+    public void remove(Study study) {
+        if (!study.isRemovable()) {
+            throw new IllegalStateException("스터디를 삭제할 수 없습니다.");
+        }
+        studyRepository.delete(study);
+    }
 }
