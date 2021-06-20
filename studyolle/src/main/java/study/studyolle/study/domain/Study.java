@@ -7,6 +7,8 @@ import study.studyolle.jone.domain.Zone;
 import study.studyolle.tag.domain.Tag;
 
 import javax.persistence.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -143,5 +145,17 @@ public class Study {
 
     public boolean isRemovable() {
         return !this.published;
+    }
+
+    public void addMember(Account account) {
+        this.getMembers().add(account);
+    }
+
+    public void removeMember(Account account) {
+        this.getMembers().remove(account);
+    }
+
+    public String getEncodedPath() {
+        return URLEncoder.encode(this.path, StandardCharsets.UTF_8);
     }
 }
